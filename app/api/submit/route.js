@@ -39,13 +39,15 @@ export async function POST(request) {
     interestsOther,
   ].filter(Boolean).join(", ");
 
-  // Notes only contains overflow fields
+  // Notes contains overflow fields not in dedicated columns
   const notes = [
-    sectors            ? `Sectors of interest: ${sectors}` : "",
-    ypgInterest        ? `YPG interest: ${ypgInterest}` : "",
-    referrer           ? `Referred by: ${referrer}` : "",
-    companySize        ? `Company size: ${companySize}` : "",
-    otherComments      ? `Other comments: ${otherComments}` : "",
+    sectors             ? `Sectors of interest: ${sectors}` : "",
+    menaCountries       ? `MENA countries worked in: ${menaCountries}` : "",
+    relevantCountries   ? `Most relevant countries: ${relevantCountries}` : "",
+    ypgInterest         ? `YPG interest: ${ypgInterest}` : "",
+    referrer            ? `Referred by: ${referrer}` : "",
+    companySize         ? `Company size: ${companySize}` : "",
+    otherComments       ? `Other comments: ${otherComments}` : "",
     `Communications consent: ${consentComms ? "Yes" : "No"}`,
     `Photography consent: ${consentPhoto ? "Yes" : "No"}`,
   ].filter(Boolean).join("\n");
@@ -59,24 +61,22 @@ export async function POST(request) {
     },
   };
 
-  if (email?.trim())              properties["Email"]                = { email: email.trim() };
-  if (jobTitle?.trim())           properties["Job Title"]            = { rich_text: [{ text: { content: jobTitle.trim().slice(0, 2000) } }] };
-  if (company?.trim())            properties["Company"]              = { rich_text: [{ text: { content: company.trim().slice(0, 2000) } }] };
-  if (linkedin?.trim())           properties["LinkedIn"]             = { url: linkedin.trim() };
-  if (telephone?.trim())          properties["Telephone"]            = { rich_text: [{ text: { content: telephone.trim().slice(0, 2000) } }] };
-  if (orgTypesStr)                properties["Organisation Type"]    = { rich_text: [{ text: { content: orgTypesStr.slice(0, 2000) } }] };
-  if (interestsStr)               properties["Areas of Interest"]    = { rich_text: [{ text: { content: interestsStr.slice(0, 2000) } }] };
-  if (whyJoin?.trim())            properties["Why Join"]             = { rich_text: [{ text: { content: whyJoin.trim().slice(0, 2000) } }] };
-  if (countriesOfInterest?.trim())properties["Countries of Interest"]= { rich_text: [{ text: { content: countriesOfInterest.trim().slice(0, 2000) } }] };
-  if (menaExperience?.trim())     properties["MENA Experience"]      = { rich_text: [{ text: { content: menaExperience.trim().slice(0, 2000) } }] };
-  if (menaCountries?.trim())      properties["MENA Countries"]       = { rich_text: [{ text: { content: menaCountries.trim().slice(0, 2000) } }] };
-  if (relevantCountries?.trim())  properties["Relevant Countries"]   = { rich_text: [{ text: { content: relevantCountries.trim().slice(0, 2000) } }] };
-  if (companyDesc?.trim())        properties["Company Description"]  = { rich_text: [{ text: { content: companyDesc.trim().slice(0, 2000) } }] };
-  if (roleDesc?.trim())           properties["Role Description"]     = { rich_text: [{ text: { content: roleDesc.trim().slice(0, 2000) } }] };
-  if (speakingInterest?.trim())   properties["Speaking Interest"]    = { rich_text: [{ text: { content: speakingInterest.trim().slice(0, 2000) } }] };
-  if (sponsorshipInterest?.trim())properties["Sponsorship Interest"] = { rich_text: [{ text: { content: sponsorshipInterest.trim().slice(0, 2000) } }] };
-  if (notes)                      properties["Notes"]                = { rich_text: [{ text: { content: notes.slice(0, 2000) } }] };
-  if (submittedAt)                properties["Submitted At"]         = { date: { start: submittedAt } };
+  if (email?.trim())               properties["Email"]                 = { email: email.trim() };
+  if (jobTitle?.trim())            properties["Job Title"]             = { rich_text: [{ text: { content: jobTitle.trim().slice(0, 2000) } }] };
+  if (company?.trim())             properties["Company"]               = { rich_text: [{ text: { content: company.trim().slice(0, 2000) } }] };
+  if (linkedin?.trim())            properties["LinkedIn"]              = { url: linkedin.trim() };
+  if (telephone?.trim())           properties["Telephone"]             = { rich_text: [{ text: { content: telephone.trim().slice(0, 2000) } }] };
+  if (orgTypesStr)                 properties["Organisation Type"]     = { rich_text: [{ text: { content: orgTypesStr.slice(0, 2000) } }] };
+  if (interestsStr)                properties["Areas of Interest"]     = { rich_text: [{ text: { content: interestsStr.slice(0, 2000) } }] };
+  if (whyJoin?.trim())             properties["Why Join"]              = { rich_text: [{ text: { content: whyJoin.trim().slice(0, 2000) } }] };
+  if (countriesOfInterest?.trim()) properties["Countries of Interest"] = { rich_text: [{ text: { content: countriesOfInterest.trim().slice(0, 2000) } }] };
+  if (menaExperience?.trim())      properties["MENA Experience"]       = { rich_text: [{ text: { content: menaExperience.trim().slice(0, 2000) } }] };
+  if (companyDesc?.trim())         properties["Company Description"]   = { rich_text: [{ text: { content: companyDesc.trim().slice(0, 2000) } }] };
+  if (roleDesc?.trim())            properties["Role Description"]      = { rich_text: [{ text: { content: roleDesc.trim().slice(0, 2000) } }] };
+  if (speakingInterest?.trim())    properties["Speaking Interest"]     = { rich_text: [{ text: { content: speakingInterest.trim().slice(0, 2000) } }] };
+  if (sponsorshipInterest?.trim()) properties["Sponsorship Interest"]  = { rich_text: [{ text: { content: sponsorshipInterest.trim().slice(0, 2000) } }] };
+  if (notes)                       properties["Notes"]                 = { rich_text: [{ text: { content: notes.slice(0, 2000) } }] };
+  if (submittedAt)                 properties["Submitted At"]          = { date: { start: submittedAt } };
 
   try {
     const res = await fetch("https://api.notion.com/v1/pages", {
