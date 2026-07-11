@@ -19,7 +19,7 @@ export async function POST(request) {
 
   const {
     title, firstName, lastName, email, jobTitle, company,
-    linkedin, telephone, whyJoin, sectors, countriesOfInterest,
+    linkedin, telephone, whyJoin, countriesOfInterest,
     orgTypes, orgTypeOther, interests, interestsOther,
     speakingInterest, ypgInterest, menaExperience, menaCountries,
     relevantCountries, referrer, companyDesc, roleDesc,
@@ -41,7 +41,6 @@ export async function POST(request) {
 
   // Notes contains overflow fields not in dedicated columns
   const notes = [
-    sectors             ? `Sectors of interest: ${sectors}` : "",
     menaCountries       ? `MENA countries worked in: ${menaCountries}` : "",
     relevantCountries   ? `Most relevant countries: ${relevantCountries}` : "",
     ypgInterest         ? `YPG interest: ${ypgInterest}` : "",
