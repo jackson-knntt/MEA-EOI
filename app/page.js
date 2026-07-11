@@ -18,7 +18,6 @@ const initial = {
   telephone: "",
   // Step 2
   whyJoin: "",
-  sectors: "",
   countriesOfInterest: "",
   orgTypes: [],
   orgTypeOther: "",
@@ -228,14 +227,6 @@ export default function Page() {
                     <label>Why do you want to join the Middle East Association? <span className="opt">(optional)</span></label>
                     <textarea value={form.whyJoin} onChange={(e) => update("whyJoin", e.target.value)}
                       placeholder="Tell us what draws you to the MEA and what you hope to gain from membership…" />
-                  </div>
-                </div>
-
-                <div className="field-row single">
-                  <div className="field">
-                    <label>Are there specific industries or sectors you are particularly interested in? <span className="opt">(optional)</span></label>
-                    <textarea value={form.sectors} onChange={(e) => update("sectors", e.target.value)}
-                      placeholder="e.g. Energy, Finance, Technology, Defence…" />
                   </div>
                 </div>
 
