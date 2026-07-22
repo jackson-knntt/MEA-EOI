@@ -24,7 +24,7 @@ export async function POST(request) {
     speakingInterest, ypgInterest, menaExperience, menaCountries,
     relevantCountries, referrer, companyDesc, roleDesc,
     sponsorshipInterest, companySize, otherComments,
-    consentComms, consentPhoto, submittedAt,
+    consentComms, submittedAt,
   } = body;
 
   const fullName = [title, firstName, lastName].filter(Boolean).join(" ").trim();
@@ -48,7 +48,6 @@ export async function POST(request) {
     companySize         ? `Company size: ${companySize}` : "",
     otherComments       ? `Other comments: ${otherComments}` : "",
     `Communications consent: ${consentComms ? "Yes" : "No"}`,
-    `Photography consent: ${consentPhoto ? "Yes" : "No"}`,
   ].filter(Boolean).join("\n");
 
   const properties = {
