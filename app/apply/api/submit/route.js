@@ -1,4 +1,6 @@
 // Merges EOI data with new membership details and writes to corporate membership database
+import { sendWelcomeEmail } from "@/lib/welcomeEmail";
+
 export async function POST(request) {
   const token = process.env.NOTION_TOKEN;
   const membershipDatabaseId = process.env.NOTION_MEMBERSHIP_DATABASE_ID;
@@ -80,6 +82,13 @@ export async function POST(request) {
         { error: "We could not save your details. Please try again." },
         { status: 502 }
       );
+    }
+
+    // Best-effort welcome email; never blocks a successful submission.
+    try {
+      await sendWelcomeEmail({ tier: "corporate", toName: fullName, toEmail: email });
+    } catch (err) {
+      console.error("Welcome email failed (membership still saved):", err.message);
     }
 
     return Response.json({ ok: true });

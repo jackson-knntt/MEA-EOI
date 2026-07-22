@@ -1,6 +1,8 @@
 // Merges EOI data with new membership details and writes to the
 // YPG (Free) membership database. YPG membership is free, so there is
 // no payment step after this write succeeds.
+import { sendWelcomeEmail } from "@/lib/welcomeEmail";
+
 export async function POST(request) {
   const token = process.env.NOTION_TOKEN;
   const membershipDatabaseId = process.env.NOTION_YPG_DATABASE_ID;
@@ -82,6 +84,13 @@ export async function POST(request) {
         { error: "We could not save your details. Please try again." },
         { status: 502 }
       );
+    }
+
+    // Best-effort welcome email; never blocks a successful submission.
+    try {
+      await sendWelcomeEmail({ tier: "ypg", toName: fullName, toEmail: email });
+    } catch (err) {
+      console.error("Welcome email failed (membership still saved):", err.message);
     }
 
     return Response.json({ ok: true });
