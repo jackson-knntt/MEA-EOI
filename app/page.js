@@ -36,7 +36,6 @@ const initial = {
   companySize: "",
   otherComments: "",
   consentComms: false,
-  consentPhoto: false,
   submittedAt: new Date().toISOString().slice(0, 10),
 };
 
@@ -428,19 +427,11 @@ export default function Page() {
                     We will only use your personal information to administer your account and to
                     provide the products and services you have requested from us.
                   </p>
-                  <div className="check-row" style={{ marginBottom: 14 }}>
+                  <div className="check-row">
                     <input id="consentComms" type="checkbox" checked={form.consentComms}
                       onChange={(e) => update("consentComms", e.target.checked)} />
                     <label htmlFor="consentComms">
                       I agree to receive communications from The Middle East Association
-                    </label>
-                  </div>
-                  <div className="check-row">
-                    <input id="consentPhoto" type="checkbox" checked={form.consentPhoto}
-                      onChange={(e) => update("consentPhoto", e.target.checked)} />
-                    <label htmlFor="consentPhoto">
-                      I acknowledge that photography takes place during MEA events and consent
-                      to my image appearing in general event media and social media posts
                     </label>
                   </div>
                 </div>
