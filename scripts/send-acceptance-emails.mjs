@@ -24,6 +24,21 @@ const EMAILJS_PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY;
 const APPLY_BASE_URL = "https://mea-eoi.vercel.app/apply";
 const SENT_CHECKBOX = "Acceptance Email Sent";
 
+// Maps the "Membership Category" Select value chosen by the admin to the
+// landing page the applicant is sent to. Anything unrecognised (including a
+// blank category) falls back to Corporate, which preserves the original
+// behaviour of this script.
+const CATEGORY_PATHS = {
+  "Corporate": "",              // -> /apply
+  "Sole Trader": "/sole-trader", // -> /apply/sole-trader
+  "YPG": "/ypg",                 // -> /apply/ypg
+};
+
+function applyLinkFor(category, email) {
+  const path = CATEGORY_PATHS[category] ?? "";
+  return `${APPLY_BASE_URL}${path}?email=${encodeURIComponent(email)}`;
+}
+
 const NOTION_HEADERS = {
   Authorization: `Bearer ${NOTION_TOKEN}`,
   "Content-Type": "application/json",
@@ -90,11 +105,12 @@ function extractRow(page) {
     pageId: page.id,
     email: props["Email"]?.email || "",
     fullName: props["Full Name"]?.title?.[0]?.plain_text || "",
+    category: props["Membership Category"]?.select?.name || "",
   };
 }
 
-async function sendAcceptanceEmail({ email, fullName }) {
-  const membershipLink = `${APPLY_BASE_URL}?email=${encodeURIComponent(email)}`;
+async function sendAcceptanceEmail({ email, fullName, category }) {
+  const membershipLink = applyLinkFor(category, email);
 
   const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
     method: "POST",
@@ -160,7 +176,8 @@ async function main() {
 
     try {
       await sendAcceptanceEmail(row);
-      console.log(`Sent acceptance email to ${row.email} (${row.fullName})`);
+      const cat = row.category || "Corporate (default — no category set)";
+      console.log(`Sent acceptance email to ${row.email} (${row.fullName}) [${cat}]`);
     } catch (err) {
       // Email failed: do NOT tick the checkbox, so it retries next run.
       console.error(`FAILED to email ${row.email}: ${err.message}`);
